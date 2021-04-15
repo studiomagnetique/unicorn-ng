@@ -91,10 +91,11 @@ export class UnicornsService {
     return forkJoin([unicorns$, capacities$]).pipe(
       map(([unicorns, capacities]) =>
         unicorns.map(
-          (u: Unicorn): UnicornWithCapacitiesLabels => ({
-            ...u,
-            capacitiesLabels: u.capacities.map(
-              (c: number): string => capacities.find((c2: Capacity) => c2.id === c)?.label ?? '',
+          (unicorn: Unicorn): UnicornWithCapacitiesLabels => ({
+            ...unicorn,
+            capacitiesLabels: unicorn.capacities.map(
+              (capacity: number): string =>
+                capacities.find((capacity_: Capacity) => capacity_.id === capacity)?.label ?? '',
             ),
           }),
         ),
