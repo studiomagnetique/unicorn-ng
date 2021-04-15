@@ -1,1 +1,11 @@
-<div>Bonne nouvelle, il reste {{ count$ | async }} licornes à adopter 🚀 !!!</div>
+<ng-container *ngIf="unicorns$ | async as unicorns">
+  <h1>Bonne nouvelle, il reste {{ unicorns.length }} licornes à adopter 🚀 !!!</h1>
+
+  <div class="cards-container">
+    <app-unicorn-card
+      *ngFor="let unicorn of unicorns"
+      [unicorn]="unicorn"
+      (removed)="removed($event)"
+    ></app-unicorn-card>
+  </div>
+</ng-container>

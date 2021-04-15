@@ -1,0 +1,32 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar><mat-icon>add</mat-icon></div>
+    <mat-card-title>Add</mat-card-title>
+    <mat-card-subtitle>a beautifull unicorn</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="formGroup">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input type="text" matInput placeholder="Ex. Roselyne" required formControlName="name" />
+        <mat-error *ngIf="formGroup.controls.name.hasError('required')"> Name is <strong>requis</strong> </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Birthyear</mat-label>
+        <input type="number" matInput placeholder="Ex. 1970" required formControlName="birthyear" />
+        <mat-error *ngIf="formGroup.controls.birthyear.hasError('required')">
+          Birthyear is <strong>requis</strong>
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.birthyear.hasError('min')">
+          Birthyear must be gretter than <strong>1800</strong>
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.birthyear.hasError('max')">
+          Birthyear must be lower than <strong>current year</strong>
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+  <mat-card-actions>
+    <button type="button" color="primary" [disabled]="formGroup.invalid" mat-raised-button>Add</button>
+  </mat-card-actions>
+</mat-card>

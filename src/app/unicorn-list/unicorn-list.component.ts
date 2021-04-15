@@ -1,27 +1,37 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, of, ReplaySubject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-import { Unicorn } from '../shared/models/unicorn.model';
+import { Component, OnDestroy } from '@angular/core';
+import { Observable, ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { UnicornsService } from '../shared/services/unicorns.service';
+import { Unicorn, UnicornWithCapacitiesLabels } from './../shared/models/unicorn.model';
 
 @Component({
   selector: 'app-unicorn-list',
   templateUrl: './unicorn-list.component.html',
   styleUrls: ['./unicorn-list.component.scss'],
 })
-export class UnicornListComponent implements OnInit, OnDestroy {
+export class UnicornListComponent implements OnDestroy {
   // come from stackoverflow...
   readonly #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  public count$: Observable<number> = of();
+  // observable who store unicorns list
+  public unicorns$: Observable<UnicornWithCapacitiesLabels[]> = this.unicornsService
+    .getAllWithCapacitiesLabels()
+    .pipe(takeUntil(this.#destroyed$));
 
   constructor(private unicornsService: UnicornsService) {}
 
-  ngOnInit(): void {
-    this.count$ = this.unicornsService.getAll().pipe(
-      takeUntil(this.#destroyed$),
-      map((unicorns: Unicorn[]) => unicorns.length),
-    );
+  /**
+   *
+   * @param unicorn Remove on unicorn
+   */
+  public removed(unicorn: Unicorn): void {
+    this.unicornsService
+      .delete(unicorn.id)
+      .pipe(takeUntil(this.#destroyed$))
+      .subscribe(() => {
+        // FIXME:  not sure this way is the best one.
+        this.unicorns$ = this.unicornsService.getAllWithCapacitiesLabels3().pipe(takeUntil(this.#destroyed$));
+      });
   }
 
   public ngOnDestroy(): void {
