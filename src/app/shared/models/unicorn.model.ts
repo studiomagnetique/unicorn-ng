@@ -7,3 +7,5 @@ export interface Unicorn {
   hobbies: string[];
   capacities: number[];
 }
+
+export type UnicornWithCapacitiesLabels = Unicorn & { capacitiesLabels: string[] };
